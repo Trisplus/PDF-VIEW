@@ -1,11 +1,10 @@
 const viewerContainer = document.getElementById('viewerContainer');
 const pdfUrlInput = document.getElementById('pdfUrl');
-const loadPdfButton = document.getElementById('loadPdfButton'); // Assuming a button with id 'loadPdfButton'
 
 function loadPDF() {
   const url = pdfUrlInput.value;
 
-  // Clear the viewer container
+  // Clear any existing PDF content
   viewerContainer.innerHTML = '';
 
   pdfjsLib.getDocument(url)
@@ -15,6 +14,7 @@ function loadPDF() {
         container: viewerContainer,
       });
       viewerContainer.appendChild(viewer.container);
+
       viewer.setDocument(pdf);
     })
     .catch(error => {
@@ -23,5 +23,9 @@ function loadPDF() {
     });
 }
 
-// Assuming the button has an id 'loadPdfButton'
-loadPdfButton.addEventListener('click', loadPDF);
+// Initial load if a default URL is provided
+const defaultPdfUrl = 'https://www.karmasandhan.com/wp-content/uploads/CSIR-RAB-Section-Officer-Recruitment-2024-1.pdf'; // Replace with your default URL
+if (defaultPdfUrl) {
+  pdfUrlInput.value = defaultPdfUrl;
+  loadPDF();
+}
