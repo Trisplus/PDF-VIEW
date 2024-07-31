@@ -1,5 +1,6 @@
 const viewerContainer = document.getElementById('viewerContainer');
 const pdfUrlInput = document.getElementById('pdfUrl');
+const loadPdfButton = document.getElementById('loadPdfButton'); // Assuming a button with id 'loadPdfButton'
 
 function loadPDF() {
   const url = pdfUrlInput.value;
@@ -14,7 +15,6 @@ function loadPDF() {
         container: viewerContainer,
       });
       viewerContainer.appendChild(viewer.container);
-
       viewer.setDocument(pdf);
     })
     .catch(error => {
@@ -23,9 +23,5 @@ function loadPDF() {
     });
 }
 
-// Initial load if a default URL is provided
-const defaultPdfUrl = 'https://example.com/your-pdf.pdf'; // Replace with your default URL
-if (defaultPdfUrl) {
-  pdfUrlInput.value = defaultPdfUrl;
-  loadPDF();
-}
+// Assuming the button has an id 'loadPdfButton'
+loadPdfButton.addEventListener('click', loadPDF);
