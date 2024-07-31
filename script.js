@@ -4,7 +4,7 @@ const pdfUrlInput = document.getElementById('pdfUrl');
 function loadPDF() {
   const url = pdfUrlInput.value;
 
-  // Clear any existing PDF content
+  // Clear the viewer container
   viewerContainer.innerHTML = '';
 
   pdfjsLib.getDocument(url)
@@ -24,7 +24,7 @@ function loadPDF() {
 }
 
 // Initial load if a default URL is provided
-const defaultPdfUrl = 'https://www.karmasandhan.com/wp-content/uploads/CSIR-RAB-Section-Officer-Recruitment-2024-1.pdf'; // Replace with your default URL
+const defaultPdfUrl = 'https://example.com/your-pdf.pdf'; // Replace with your default URL
 if (defaultPdfUrl) {
   pdfUrlInput.value = defaultPdfUrl;
   loadPDF();
