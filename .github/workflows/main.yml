@@ -12,21 +12,13 @@ jobs:
       - name: Install unzip
         run: sudo apt-get update && sudo apt-get install unzip -y
 
-      - name: Print working directory
-        run: echo "Working directory: $(pwd)"
-
-      - name: Check for zip file
+      - name: Find and unzip pdfjs.zip
         run: |
-          if [[ -f pdfjs.zip ]]; then
-            echo "pdfjs.zip found."
+          if [[ -f "pdfjs.zip" ]]; then
+            unzip pdfjs.zip
           else
-            echo "pdfjs.zip not found."
+            echo "pdfjs.zip not found. Skipping unzip."
           fi
-
-      - name: Unzip file
-        run: |
-          unzip pdfjs.zip
-          echo "Unzip completed."
 
       - name: Check unzip exit code (optional)
         run: |
