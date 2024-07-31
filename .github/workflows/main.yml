@@ -3,6 +3,10 @@ name: Unzip, Delete, and Commit
 on:
   workflow_dispatch:
 
+env:
+  GIT_AUTHOR_NAME: "Trisplus"  # Replace with your actual name
+  GIT_AUTHOR_EMAIL: "trischand@protonmail.com"  # Replace with your email
+
 jobs:
   unzip:
     runs-on: ubuntu-latest
@@ -20,6 +24,11 @@ jobs:
           else
             echo "pdfjs.zip not found. Skipping unzip."
           fi
+
+      - name: Set Git config
+        run: |
+          git config --local user.name "${{ env.GIT_AUTHOR_NAME }}"
+          git config --local user.email "${{ env.GIT_AUTHOR_EMAIL }}"
 
       - name: Add changes
         run: git add .
