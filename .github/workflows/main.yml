@@ -1,4 +1,4 @@
-name: Unzip pdfjs.zip
+name: Unzip, Delete, and Commit
 
 on:
   workflow_dispatch:
@@ -16,12 +16,19 @@ jobs:
         run: |
           if [[ -f "pdfjs.zip" ]]; then
             unzip pdfjs.zip
+            rm pdfjs.zip
           else
             echo "pdfjs.zip not found. Skipping unzip."
           fi
 
-      - name: Check unzip exit code (optional)
-        run: |
-          if [[ $? -ne 0 ]]; then
-            echo "Unzip failed! Check the repository logs for details."
-          fi
+      - name: Add changes
+        run: git add .
+
+      - name: Commit changes
+        run: git commit -m "Unzipped and deleted pdfjs.zip"
+
+      - name: Push changes
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          token: ${{ secrets.AIR_TOKEN }}
