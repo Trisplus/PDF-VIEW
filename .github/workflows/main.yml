@@ -1,0 +1,36 @@
+name: Download and Unzip
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  download_and_unzip:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 'lts/*' # Automatically use the latest LTS version
+
+    - name: Install unzip tool
+      run: sudo apt-get install -y unzip
+
+    - name: Download file
+      run: curl -L -o pdfjs-4.5.136-dist.zip https://objects.githubusercontent.com/github-production-release-asset-2e65be/1663468/915a6e40-995a-4901-9193-e0c0390b2f1e?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20240731%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240731T061223Z&X-Amz-Expires=300&X-Amz-Signature=b6b26ede86e1bcf67829b82be442ac210d9be08b3a0a21160bfba54fe65a128f&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=1663468&response-content-disposition=attachment%3B%20filename%3Dpdfjs-4.5.136-dist.zip&response-content-type=application%2Foctet-stream # Replace with your URL
+
+    - name: Unzip file
+      run: unzip -o pdfjs-4.5.136-dist.zip -d ./extracted
+
+    - name: Commit and push changes
+      run: |
+        git config --global user.name "GitHub Action"
+        git config --global user.email "action@github.com"
+        git add .
+        git commit -m "Add unzipped files"
+        git push
