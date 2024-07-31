@@ -1,4 +1,4 @@
-name: Download, Unzip, and Move
+name: Download, Unpack, and Move
 
 on:
   workflow_dispatch:
@@ -6,22 +6,29 @@ on:
 env:
   GIT_AUTHOR_NAME: "Trisplus"  # Replace with your actual name
   GIT_AUTHOR_EMAIL: "trischand@protonmail.com"  # Replace with your email
-  ZIP_URL: "https://objects.githubusercontent.com/github-production-release-asset-2e65be/1663468/915a6e40-995a-4901-9193-e0c0390b2f1e?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20240731%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240731T101802Z&X-Amz-Expires=300&X-Amz-Signature=8ca425c338aec65110b8c46e6d1f42acbec64e59e09a2e370aef366c2d3068d6&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=1663468&response-content-disposition=attachment%3B%20filename%3Dpdfjs-4.5.136-dist.zip&response-content-type=application%2Foctet-stream"  # Replace with the actual URL
+  TGZ_URL: "https://registry.npmjs.org/pdfjs-dist/-/pdfjs-dist-4.5.136.tgz"  # Replace with the actual URL
 
 jobs:
-  unzip:
+  unpack:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
+      - name: Update and install required packages
+        run: |
+          sudo apt update
+          sudo apt install -y curl tar unzip
+
       - name: Create pdfjs folder
         run: mkdir pdfjs
 
-      - name: Download zip file
-        run: curl -L -o pdfjs.zip ${{ env.ZIP_URL }}
+      - name: Download tgz file
+        run: curl -L -o pdfjs.tgz ${{ env.TGZ_URL }}
 
-      - name: Unzip to pdfjs folder
-        run: unzip pdfjs.zip -d pdfjs
+      - name: Unpack tgz to pdfjs folder
+        run: |
+          tar -xzf pdfjs.tgz -C pdfjs
+          rm pdfjs.tgz
 
       - name: Set Git config
         run: |
@@ -32,7 +39,7 @@ jobs:
         run: git add .
 
       - name: Commit changes
-        run: git commit -m "Downloaded and unzipped file to pdfjs folder"
+        run: git commit -m "Downloaded and unpacked tgz file to pdfjs folder"
 
       - name: Push changes
         uses: actions/checkout@v3
