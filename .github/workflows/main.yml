@@ -1,10 +1,10 @@
-name: Unzip File
+name: Unzip pdfjs.zip
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
     paths:
-      - '**.zip'
+      - 'pdfjs.zip'  # Only trigger on changes to pdfjs.zip
 
 jobs:
   unzip:
@@ -15,11 +15,16 @@ jobs:
       - name: Install unzip
         run: sudo apt-get update && sudo apt-get install unzip -y
 
-      - name: Find zip file
-        id: find_zip
+      - name: Find and unzip pdfjs.zip
         run: |
-          find . -name "*.zip" -print -quit
+          if [[ -f "pdfjs.zip" ]]; then
+            unzip pdfjs.zip
+          else
+            echo "pdfjs.zip not found. Skipping unzip."
+          fi
 
-      - name: Unzip file
-        if: steps.find_zip.outputs.find_zip != ''
-        run: unzip ${{ steps.find_zip.outputs.find_zip }}
+      - name: Check unzip exit code (optional)
+        run: |
+          if [[ $? -ne 0 ]]; then
+            echo "Unzip failed! Check the repository logs for details."
+          fi
