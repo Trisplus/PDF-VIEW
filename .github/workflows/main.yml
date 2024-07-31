@@ -1,4 +1,4 @@
-name: Unzip, Delete, and Commit
+name: Unzip, Move, and Commit
 
 on:
   workflow_dispatch:
@@ -16,10 +16,13 @@ jobs:
       - name: Install unzip
         run: sudo apt-get update && sudo apt-get install unzip -y
 
+      - name: Create pdfjs folder
+        run: mkdir pdfjs
+
       - name: Find and unzip pdfjs.zip
         run: |
           if [[ -f "pdfjs.zip" ]]; then
-            unzip pdfjs.zip
+            unzip pdfjs.zip -d pdfjs
             rm pdfjs.zip
           else
             echo "pdfjs.zip not found. Skipping unzip."
@@ -34,7 +37,7 @@ jobs:
         run: git add .
 
       - name: Commit changes
-        run: git commit -m "Unzipped and deleted pdfjs.zip"
+        run: git commit -m "Unzipped and moved files to pdfjs folder"
 
       - name: Push changes
         uses: actions/checkout@v3
