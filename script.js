@@ -1,31 +1,30 @@
-const viewerContainer = document.getElementById('viewerContainer');
-const pdfUrlInput = document.getElementById('pdfUrl');
+const urlInput = document.createElement('input');
+urlInput.type = 'text';
+urlInput.placeholder = 'Enter PDF URL';
 
-function loadPDF() {
-  const url = pdfUrlInput.value;
+const loadButton = document.createElement('button');
+loadButton.textContent = 'Load PDF';
 
-  // Clear any existing PDF content
-  viewerContainer.innerHTML = '';
+const pdfViewer = document.getElementById('pdf-viewer');
 
-  pdfjsLib.getDocument(url)
-    .promise
-    .then(pdf => {
-      const viewer = new pdfjsLib.PDFViewer({
-        container: viewerContainer,
-      });
-      viewerContainer.appendChild(viewer.container);
+document.body.insertBefore(urlInput, pdfViewer);
+document.body.insertBefore(loadButton, pdfViewer);
 
-      viewer.setDocument(pdf);
-    })
-    .catch(error => {
-      console.error('Error loading PDF:', error);
-      viewerContainer.innerHTML = 'Error loading PDF';
+loadButton.addEventListener('click', () => {
+    const url = urlInput.value;
+    pdfjsLib.getDocument(url).promise.then((pdf) => {
+        // Load the first page
+        pdf.getPage(1).then((page) => {
+            const viewport = page.getViewport({ scale: 1.0 });
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            pdfViewer.appendChild(canvas);
+
+            page.render({ canvasContext: context, viewport }).promise.then(() => {
+                // You can add more logic here for displaying multiple pages, zooming, etc.
+            });
+        });
     });
-}
-
-// Initial load if a default URL is provided
-const defaultPdfUrl = 'https://www.karmasandhan.com/wp-content/uploads/CSIR-RAB-Section-Officer-Recruitment-2024-1.pdf'; // Replace with your default URL
-if (defaultPdfUrl) {
-  pdfUrlInput.value = defaultPdfUrl;
-  loadPDF();
-}
+});
