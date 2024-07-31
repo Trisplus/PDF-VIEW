@@ -5,6 +5,8 @@
   <link rel="stylesheet" href="pdfjs/web/viewer.css">
 </head>
 <body>
+  <input type="text" id="pdfUrlInput" placeholder="Enter PDF URL">
+  <button onclick="loadPDF()">Load PDF</button>
   <div id="viewerContainer"></div>
   <script src="pdfjs/build/pdf.mjs"></script>
   <script src="pdfjs/build/pdf.worker.mjs"></script>
