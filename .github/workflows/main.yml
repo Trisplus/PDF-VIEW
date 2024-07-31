@@ -1,5 +1,6 @@
-name: Download and Unzip
-
+name: Setup Node.js environment
+uses: actions/setup-node@v4.0.3
+            
 on:
   push:
     branches:
