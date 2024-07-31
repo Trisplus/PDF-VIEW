@@ -1,10 +1,7 @@
 name: Unzip pdfjs.zip
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - 'pdfjs.zip'  # Only trigger on changes to pdfjs.zip
+  workflow_dispatch:
 
 jobs:
   unzip:
