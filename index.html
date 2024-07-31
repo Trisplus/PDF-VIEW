@@ -1,12 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>PDF Viewer</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <title>PDF.js Viewer</title>
+  <link rel="stylesheet" href="web/viewer.css">
+  <script src="pdf.js"></script>
+  <script src="pdf.worker.js"></script>
 </head>
 <body>
-    <div id="pdf-viewer"></div>
-    <script src="pdfjs/build/pdf.mjs"></script>
-    <script src="script.js"></script>
+  <div id="viewerContainer" class="viewerContainer">
+    <div id="viewer" class="pdfViewer"></div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const pdfUrl = urlParams.get('file');
+
+    if (pdfUrl) {
+      const loadingTask = pdfjsLib.getDocument(pdfUrl);
+      loadingTask.promise.then(function(pdf) {
+        pdf.getPage(1).then(function(page) {
+          const scale = 1.5;
+          const viewport = page.getViewport({ scale: scale });
+
+          const canvas = document.createElement('canvas');
+          document.getElementById('viewer').appendChild(canvas);
+          const context = canvas.getContext('2d');
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+
+          const renderContext = {
+            canvasContext: context,
+            viewport: viewport
+          };
+          page.render(renderContext);
+        });
+      });
+    }
+  </script>
 </body>
 </html>
