@@ -1,21 +1,25 @@
-document.addEventListener('DOMContentLoaded', function() {
-  // Get the PDF URL from the query parameter or a user input field
-  const urlParams = new URLSearchParams(window.location.search);
-  const pdfUrl = urlParams.get('pdf');
-
-  // Replace with your PDF viewer logic using PDF.js
+function loadPDF() {
+  const pdfUrlInput = document.getElementById('pdfUrlInput');
+  const pdfUrl = pdfUrlInput.value;
   const container = document.getElementById('viewerContainer');
-  pdfjsLib.getDocument(pdfUrl).promise.then(function(pdf) {
-    // Get the number of pages
-    const numPages = pdf.numPages;
 
-    // Load page promises
+  // Clear previous content
+  container.innerHTML = '';
+
+  // Basic error handling for empty input
+  if (!pdfUrl) {
+    alert('Please enter a PDF URL');
+    return;
+  }
+
+  pdfjsLib.getDocument(pdfUrl).promise.then(function(pdf) {
+    const numPages = pdf.numPages;
     const loadPagePromises = [];
+
     for (let i = 1; i <= numPages; i++) {
       loadPagePromises.push(pdf.getPage(i));
     }
 
-    // Render pages when all pages are loaded
     Promise.all(loadPagePromises).then(function(pages) {
       pages.forEach(function(page, index) {
         const viewport = page.getViewport({ scale: 1.0 });
@@ -29,6 +33,12 @@ document.addEventListener('DOMContentLoaded', function() {
           // Page rendered successfully
         });
       });
+    }).catch(function(error) {
+      console.error('Error loading PDF:', error);
+      // Handle error, e.g., display an error message to the user
     });
+  }).catch(function(error) {
+    console.error('Error fetching PDF:', error);
+    // Handle error, e.g., display an error message to the user
   });
-});
+}
